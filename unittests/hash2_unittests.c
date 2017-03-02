@@ -5,11 +5,11 @@
 
 #include <gtest/gtest.h>
 
-TEST(TREE, INSERT_AND_FIND)
+TEST(HASH2, INSERT_AND_FIND)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 10000; i++) {
 		if (i % 2 == 0) {
 			a = i;
@@ -27,11 +27,11 @@ TEST(TREE, INSERT_AND_FIND)
 	M->destroy(M);
 }
 
-TEST(TREE, INSERT_CLEAR_FIND)
+TEST(HASH2, INSERT_CLEAR_FIND)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 10000; i++) {
 		if (i % 2 == 0) {
 			a = i;
@@ -47,11 +47,12 @@ TEST(TREE, INSERT_CLEAR_FIND)
 	M->destroy(M);
 }
 
-TEST(TREE, INSERT_AND_GET)
+
+TEST(HASH2, INSERT_AND_GET)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 10000; i++) {
 		if (i % 2 == 0) {
 			a = i;
@@ -72,11 +73,11 @@ TEST(TREE, INSERT_AND_GET)
 	M->destroy(M);
 }
 
-TEST(TREE, INSERT_REWRITE_GET)
+TEST(HASH2, INSERT_REWRITE_GET)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 10000; i++) {
 		a = i;
 		b = i * i * i;
@@ -103,11 +104,11 @@ TEST(TREE, INSERT_REWRITE_GET)
 	M->destroy(M);
 }
 
-TEST(TREE, INSERT_REMOVE_INSERT_FIND)
+TEST(HASH2, INSERT_REMOVE_INSERT_FIND)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 10000; i++) {
 		a = i;
 		b = i * i * i;
@@ -122,8 +123,10 @@ TEST(TREE, INSERT_REMOVE_INSERT_FIND)
 		int status = M->find(M, &i);
 		if (i % 2 == 0)
 			ASSERT_EQ(status, 0);
-		else
+		else {
+		//	printf("i=%d\n", i);
 			ASSERT_EQ(status, 1);
+		}
 	}
 
 	for (int i = 0; i < 10000; i += 4) {
@@ -147,9 +150,9 @@ static void accumulate(const void* key, const void* data, const void* arg)
 	*(int*)arg += *(int*)key + *(int*)data * 3;
 }
 
-TEST(TREE, FOREACH)
+TEST(HASH2, FOREACH)
 {
-	map_t M = MapTreeCreate(sizeof(int), sizeof(int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(int));
 	int sum = 0, control_sum = 0;
 	for (int i = 0; i < 1000; i++) {
 		int b = i * i;
@@ -161,11 +164,11 @@ TEST(TREE, FOREACH)
 	M->destroy(M);
 }
 
-TEST(HASH_TREE, TREE_INSERT_REWRITE_GET_100_000)
+TEST(HASH2_TIME, HASH2_INSERT_REWRITE_GET_100_000)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 100000; i++) {
 		a = i;
 		b = i * i * i;
@@ -192,11 +195,11 @@ TEST(HASH_TREE, TREE_INSERT_REWRITE_GET_100_000)
 	M->destroy(M);
 }
 
-TEST(TREE_TIME, TREE_INSERT_REWRITE_GET_1_000_000)
+TEST(HASH2_TIME, HASH2_INSERT_REWRITE_GET_1_000_000)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 1000000; i++) {
 		a = i;
 		b = i * i * i;
@@ -223,11 +226,11 @@ TEST(TREE_TIME, TREE_INSERT_REWRITE_GET_1_000_000)
 	M->destroy(M);
 }
 
-TEST(TREE_TIME, TREE_INSERT_REWRITE_GET_10_000_000)
+TEST(HASH2_TIME, HASH2_INSERT_REWRITE_GET_10_000_000)
 {
 	int a;
 	long long int b;
-	map_t M = MapTreeCreate(sizeof(int), sizeof(long long int));
+	map_t M = MapHash2Create(sizeof(int), sizeof(long long int));
 	for (int i = 0; i < 10000000; i++) {
 		a = i;
 		b = i * i * i;
@@ -253,4 +256,3 @@ TEST(TREE_TIME, TREE_INSERT_REWRITE_GET_10_000_000)
 	}
 	M->destroy(M);
 }
-

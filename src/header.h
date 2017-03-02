@@ -26,6 +26,7 @@ struct Set {
 typedef struct Set* map_t;
 map_t MapTreeCreate(size_t key_size, size_t data_size);
 map_t MapHashCreate(size_t key_size, size_t data_size);
+map_t MapHash2Create(size_t key_size, size_t data_size);
 
 
 #ifdef __cplusplus

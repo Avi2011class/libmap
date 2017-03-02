@@ -12,18 +12,21 @@ OBJ_PATH = object/
 all: libmap.a
 
 # binary test file building -> bin/gtest
-gtest: $(OBJ_PATH)gtest.o libmap.a $(OBJ_PATH)tree_unittests.o $(OBJ_PATH)hash_unittests.o
-	$(LINKER) $(OBJ_PATH)gtest.o $(OBJ_PATH)tree_unittests.o $(OBJ_PATH)hash_unittests.o libmap.a $(LINKER_OPTIONS) -o $(BIN_PATH)gtest 
+gtest: $(OBJ_PATH)gtest.o libmap.a $(OBJ_PATH)tree_unittests.o $(OBJ_PATH)hash_unittests.o $(OBJ_PATH)hash2_unittests.o
+	$(LINKER) $(OBJ_PATH)gtest.o $(OBJ_PATH)tree_unittests.o $(OBJ_PATH)hash_unittests.o $(OBJ_PATH)hash2_unittests.o libmap.a $(LINKER_OPTIONS) -o $(BIN_PATH)gtest 
 
 
 $(OBJ_PATH)gtest.o: $(TST_PATH)gtest.cpp $(SRC_PATH)header.h
 	$(CPPCOMPLIER) $(OPT) $(TST_PATH)gtest.cpp -c -o $(OBJ_PATH)gtest.o
 
-$(OBJ_PATH)tree_unittests.o: $(TST_PATH)tree_unittests.c
+$(OBJ_PATH)tree_unittests.o: $(TST_PATH)tree_unittests.c $(SRC_PATH)header.h
 	$(CPPCOMPLIER) $(OPT) $(TST_PATH)tree_unittests.c -c -o $(OBJ_PATH)tree_unittests.o
 
-$(OBJ_PATH)hash_unittests.o: $(TST_PATH)hash_unittests.c
+$(OBJ_PATH)hash_unittests.o: $(TST_PATH)hash_unittests.c $(SRC_PATH)header.h
 	$(CPPCOMPLIER) $(OPT) $(TST_PATH)hash_unittests.c -c -o $(OBJ_PATH)hash_unittests.o
+
+$(OBJ_PATH)hash2_unittests.o: $(TST_PATH)hash2_unittests.c $(SRC_PATH)header.h
+	$(CPPCOMPLIER) $(OPT) $(TST_PATH)hash2_unittests.c -c -o $(OBJ_PATH)hash2_unittests.o
 
 
 
@@ -36,7 +39,12 @@ $(OBJ_PATH)avl_tree.o: $(SRC_PATH)avl_tree.c $(SRC_PATH)header.h
 $(OBJ_PATH)hash_table.o: $(SRC_PATH)hash_table.c $(SRC_PATH)header.h
 	$(CCOMPILER) $(OPT) $(SRC_PATH)hash_table.c -c -o $(OBJ_PATH)hash_table.o
 
-libmap.a: $(OBJ_PATH)libcore.o $(OBJ_PATH)avl_tree.o $(OBJ_PATH)hash_table.o
-	ar -cr libmap.a $(OBJ_PATH)libcore.o $(OBJ_PATH)avl_tree.o $(OBJ_PATH)hash_table.o
+$(OBJ_PATH)hash-table-2.o: $(SRC_PATH)hash-table-2.c $(SRC_PATH)header.h
+	$(CCOMPILER) $(OPT) $(SRC_PATH)hash-table-2.c -c -o $(OBJ_PATH)hash-table-2.o
+
+
+
+libmap.a: $(OBJ_PATH)libcore.o $(OBJ_PATH)avl_tree.o $(OBJ_PATH)hash_table.o $(OBJ_PATH)hash-table-2.o
+	ar -cr libmap.a $(OBJ_PATH)libcore.o $(OBJ_PATH)avl_tree.o $(OBJ_PATH)hash_table.o $(OBJ_PATH)hash-table-2.o
 
 

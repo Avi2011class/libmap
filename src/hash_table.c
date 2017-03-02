@@ -7,7 +7,7 @@
 #include "header.h"
 
 #define MAX_HASH 256 * 256 * 256
-#define ALLOCATION_STEP 2
+#define ALLOCATION_STEP 3
 
 struct HT {
 	uint32_t*	allocated;
