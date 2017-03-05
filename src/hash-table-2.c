@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "macro.h"
 #include "header.h"
 
 #define TABLE_ITEMS UINT16_MAX
@@ -26,14 +27,7 @@ struct hash_table
 	extern "C" {
 #endif
 
-void Hash2SetValue (map_t S, const void* key, const void* data);
-uint8_t Hash2GetValue (map_t S, const void* key, void* buffer);
-uint8_t Hash2FindValue (map_t S, const void* key);
-void* Hash2Init (map_t S);
-void Hash2Destroy (map_t S);
-void Hash2Remove (map_t S, const void* key);
-void Hash2Clear (map_t S);
-void Hash2Foreach (map_t S, const void* arg, void (*function)(const void* key, const void* data, const void* arg));
+__PROTOTYPE(Hash2)
 
 struct hash_table* create(size_t key_size, size_t data_size);
 void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size);

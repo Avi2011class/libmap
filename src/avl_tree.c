@@ -6,20 +6,14 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "macro.h"
 #include "header.h"
 
 #ifdef __cplusplus
 	extern "C" {
 #endif
-void	TreeSetValue(struct Set* S, const void* key, const void* data);
-uint8_t	TreeGetValue(struct Set* S, const void* key, void* buffer);
-uint8_t TreeFindValue(struct Set* S, const void* key);
-void*	TreeInit();
-void	TreeDestroy(struct Set* S);
-void	TreeRemove(struct Set* S, const void* key);
-void	TreeClear(struct Set* S);
-void	TreeForeach(struct Set* S, const void* arg,
-		void (*function)(const void* key, const void* data, const void* arg));
+	
+__PROTOTYPE(Tree)
 
 struct AVLNode {
 	void* key;
@@ -31,11 +25,11 @@ struct AVLNode {
 
 typedef struct AVLNode* __node_t;
 
-static int16_t			AVLHeight(__node_t P);
-static int16_t			AVLBalanceFactor(__node_t P);
-static struct			AVLNode* AVLFindMin(__node_t P);
-static struct			AVLNode* AVLRemoveMin(__node_t P);
-void					AVLFixHeight(__node_t P);
+static int16_t	AVLHeight(__node_t P);
+static int16_t	AVLBalanceFactor(__node_t P);
+static struct	AVLNode* AVLFindMin(__node_t P);
+static struct	AVLNode* AVLRemoveMin(__node_t P);
+static void		AVLFixHeight(__node_t P);
 static __node_t	AVLRotateRight(__node_t P);
 static __node_t	AVLRotateLeft(__node_t P);
 static __node_t	AVLBalance(__node_t P);
@@ -45,20 +39,20 @@ static __node_t	AVLInsert(__node_t P, const void* key,
 static __node_t	AVLRemove(__node_t P, const void* key, size_t key_size);
 static __node_t	AVLFind(__node_t P, const void* key, size_t key_size);
 static void				AVLDestroy(__node_t P);		
-void		  AVLForeach(__node_t P, const void* arg,
+static void		AVLForeach(__node_t P, const void* arg,
 		void (*function)(const void* key, const void* data, const void* arg));
 
 #ifdef __cplusplus
 	}
 #endif
 
-void TreeSetValue(struct Set* S, const void* key, const void* data) 
+void TreeSetValue(map_t S, const void* key, const void* data) 
 {
 	S->structure_pointer = (void*) AVLInsert ((__node_t)S->structure_pointer, 
-										key, S->key_size, data, S->data_size);
+							key, S->key_size, data, S->data_size);
 }
 
-uint8_t	TreeGetValue(struct Set* S, const void* key, void* buffer)
+uint8_t	TreeGetValue(map_t S, const void* key, void* buffer)
 {
 	__node_t R = AVLFind((__node_t)S->structure_pointer, key, S->key_size);
 	if (R == NULL)
@@ -68,35 +62,35 @@ uint8_t	TreeGetValue(struct Set* S, const void* key, void* buffer)
 	return 1;
 }
 
-uint8_t TreeFindValue(struct Set* S, const void* key) 
+uint8_t TreeFindValue(map_t S, const void* key) 
 {
 	return (AVLFind((__node_t)S->structure_pointer, key, S->key_size)
 														== NULL) ? 0 : 1;
 }
 
-void* TreeInit()
+void* TreeInit(map_t S)
 {
 	return NULL;
 }
 
-void TreeDestroy(struct Set* S)
+void TreeDestroy(map_t S)
 {
 	AVLDestroy((__node_t)S->structure_pointer);
 	free(S);
 }
 
-void TreeRemove(struct Set* S, const void* key)
+void TreeRemove(map_t S, const void* key)
 {
 	S->structure_pointer = (void*)AVLRemove((__node_t)S->structure_pointer, 
 											key, S->key_size);
 }
 
-void TreeClear(struct Set* S)
+void TreeClear(map_t S)
 {
 	AVLDestroy((__node_t)S->structure_pointer);
 	S->structure_pointer = NULL;
 }
-void	TreeForeach(struct Set* S, const void* arg,
+void	TreeForeach(map_t S, const void* arg,
 		void (*function)(const void* key, const void* data, const void* arg))
 {
 	AVLForeach((__node_t)(S->structure_pointer), arg, function);
@@ -126,7 +120,7 @@ static __node_t AVLRemoveMin(__node_t P)
 	return AVLBalance(P);
 }
 
-void AVLFixHeight(__node_t P)
+static void AVLFixHeight(__node_t P)
 {
 	int16_t heightLeft = AVLHeight(P->left);
 	int16_t heightRight = AVLHeight(P->right);
@@ -244,18 +238,6 @@ static __node_t AVLFind(__node_t P, const void* key, size_t key_size)
 
 	return NULL;	
 }
-/*
-static void AVLDBGPrint(__node_t P, int tab)
-{
-	if (P != NULL) {
-		AVLDBGPrint(P->left, tab + 1);
-		for (int i = 0; i < tab; i++)
-			printf("|    ");
-		printf("%d -> %d\n", *(int*)P->key, *(int*)P->data);
-		AVLDBGPrint(P->right, tab + 1);
-	}
-} 
-//*/
 
 static void	AVLDestroy(__node_t P)
 {

@@ -4,101 +4,39 @@
 #include <stdint.h>
 
 #include "header.h"
+#include "macro.h"
 
 #ifdef __cplusplus
 	extern "C" {
 #endif
 
-// Prototypes of main Tree functions
-void	TreeSetValue(struct Set* S, const void* key, const void* data);
-uint8_t	TreeGetValue(struct Set* S, const void* key, void* buffer);
-uint8_t TreeFindValue(struct Set* S, const void* key);
-void*	TreeInit();
-void	TreeDestroy(struct Set* S);
-void	TreeRemove(struct Set* S, const void* key);
-void	TreeClear(struct Set* S);
-void	TreeForeach(struct Set* S, const void* arg, 
-		void (*function)(const void* key, const void* data, const void* arg));
+	
+__PROTOTYPE(Tree);
+__PROTOTYPE(Hash);
+__PROTOTYPE(Hash2);
 
-// Prototypes of main Hash functions
-void	HashSetValue(struct Set* S, const void* key, const void* data);
-uint8_t	HashGetValue(struct Set* S, const void* key, void* buffer);
-uint8_t HashFindValue(struct Set* S, const void* key);
-void*	HashInit(struct Set* S);
-void	HashDestroy(struct Set* S);
-void	HashRemove(struct Set* S, const void* key);
-void	HashClear(struct Set* S);
-void	HashForeach(struct Set* S, const void* arg,
-		void (*function)(const void* key, const void* data, const void* arg));
-
-// Prototypes of hash2 functions
-void	Hash2SetValue(struct Set* S, const void* key, const void* data);
-uint8_t	Hash2GetValue(struct Set* S, const void* key, void* buffer);
-uint8_t Hash2FindValue(struct Set* S, const void* key);
-void*	Hash2Init(struct Set* S);
-void	Hash2Destroy(struct Set* S);
-void	Hash2Remove(struct Set* S, const void* key);
-void	Hash2Clear(struct Set* S);
-void	Hash2Foreach(struct Set* S, const void* arg,
-		void (*function)(const void* key, const void* data, const void* arg));
-
-#ifdef __cplusplus
+#define __MAPCREATE(TYPE) \
+	struct Set* Map##TYPE##Create(size_t key_size, size_t data_size) 			\
+	{ 													\
+		struct Set* result = (struct Set*) calloc (sizeof(struct Set), 1);	\
+														\
+		result->key_size = key_size;								\
+		result->data_size = data_size;							\
+		result->structure_pointer =  TYPE##Init(result);				\
+														\
+		result->set = TYPE##SetValue;								\
+		result->get = TYPE##GetValue;								\
+		result->find = TYPE##FindValue;							\
+		result->destroy = TYPE##Destroy;							\
+		result->remove = TYPE##Remove;							\
+		result->clear = TYPE##Clear;								\
+		result->foreach = TYPE##Foreach;							\
+														\
+		return result;										\
 	}
-#endif
+	
+__MAPCREATE(Tree);
+__MAPCREATE(Hash);
+__MAPCREATE(Hash2);
 
-struct Set* MapTreeCreate(size_t key_size, size_t data_size)
-{
-	struct Set* result = (struct Set*) calloc (sizeof(struct Set), 1);
-
-	result->key_size = key_size;
-	result->data_size = data_size;
-	result->structure_pointer =  TreeInit();
-
-	result->set = TreeSetValue;
-	result->get = TreeGetValue;
-	result->find = TreeFindValue;
-	result->destroy = TreeDestroy;
-	result->remove = TreeRemove;
-	result->clear = TreeClear;
-	result->foreach = TreeForeach;
-
-	return result;
-}
-
-struct Set* MapHashCreate(size_t key_size, size_t data_size)
-{
-	struct Set* result = (struct Set*) calloc (sizeof(struct Set), 1);
-
-	result->key_size = key_size;
-	result->data_size = data_size;
-	result->structure_pointer =  HashInit(result);
-
-	result->set = HashSetValue;
-	result->get = HashGetValue;
-	result->find = HashFindValue;
-	result->destroy = HashDestroy;
-	result->remove = HashRemove;
-	result->clear = HashClear;
-	result->foreach = HashForeach;
-
-	return result;
-}
-
-struct Set* MapHash2Create(size_t key_size, size_t data_size)
-{
-	struct Set* result = (struct Set*) calloc (sizeof(struct Set), 1);
-
-	result->key_size = key_size;
-	result->data_size = data_size;
-	result->structure_pointer =  Hash2Init(result);
-
-	result->set = Hash2SetValue;
-	result->get = Hash2GetValue;
-	result->find = Hash2FindValue;
-	result->destroy = Hash2Destroy;
-	result->remove = Hash2Remove;
-	result->clear = Hash2Clear;
-	result->foreach = Hash2Foreach;
-
-	return result;
-}
+#undef __MAPCREATE
