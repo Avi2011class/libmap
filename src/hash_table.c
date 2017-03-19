@@ -24,18 +24,18 @@ typedef struct HT* __hash_t;
 __PROTOTYPE(Hash)
 
 
-__hash_t 	HTInit(size_t key_size, size_t data_size);
-void		HTSet(__hash_t H, const void* key, size_t key_size, 
+static __hash_t 	HTInit(size_t key_size, size_t data_size);
+static void		HTSet(__hash_t H, const void* key, size_t key_size, 
 							const void* data, size_t data_size);
-int		HTGet(__hash_t H, const void* key, size_t key_size, 
+static int		HTGet(__hash_t H, const void* key, size_t key_size, 
 							void* buffer, size_t data_size);
-int		HTRemove(__hash_t H, const void* key, 
+static int		HTRemove(__hash_t H, const void* key, 
 							size_t key_size, size_t data_size);
-uint8_t	HTFind(__hash_t H, const void* key, 
+static uint8_t	HTFind(__hash_t H, const void* key, 
 							size_t key_size, size_t data_size);
-void	HTClear(__hash_t H);
-void	HTDestroy(__hash_t H);
-void	HTForeach(__hash_t H, size_t key_size, size_t data_size, const void* arg,
+static void	HTClear(__hash_t H);
+static void	HTDestroy(__hash_t H);
+static void	HTForeach(__hash_t H, size_t key_size, size_t data_size, const void* arg,
 		void (*function)(const void* key, const void* data, const void* arg));
 
 
@@ -125,7 +125,7 @@ static __hash_t HTInit(size_t key_size, size_t data_size)
 	if (result->used == NULL || result->allocated == NULL 
 										|| result->data == NULL) 
 		return NULL;
-static 	return result;
+ 	return result;
 }
 
 static void HTSet(__hash_t H, const void* key, size_t key_size, 
