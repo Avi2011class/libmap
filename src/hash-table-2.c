@@ -29,14 +29,14 @@ struct hash_table
 
 __PROTOTYPE(Hash2)
 
-struct hash_table* create(size_t key_size, size_t data_size);
-void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size);
-uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size);
-void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
-uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
-void clear_hash_table(struct hash_table* table);
-void destroy_hash_table(struct hash_table* table);
-void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg));
+static struct hash_table* create(size_t key_size, size_t data_size);
+static void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size);
+static uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size);
+static void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
+static uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
+static void clear_hash_table(struct hash_table* table);
+static void destroy_hash_table(struct hash_table* table);
+static void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg));
 
 #ifdef __cplusplus
 	}
