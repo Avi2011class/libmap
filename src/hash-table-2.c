@@ -83,7 +83,7 @@ void Hash2Foreach(map_t S, const void* arg, void (*function)(const void* key, co
 	foreach_hash_table((struct hash_table*)(S->structure_pointer), S->key_size, S->data_size, arg, function);
 }
 
-unsigned int hash_FAQ6(const void* key, unsigned int items, size_t key_size)
+static unsigned int hash_FAQ6(const void* key, unsigned int items, size_t key_size)
 {
     unsigned int result_hash = 0;
     char *str = (char*)key;
@@ -100,7 +100,7 @@ unsigned int hash_FAQ6(const void* key, unsigned int items, size_t key_size)
     return result_hash % items;
 };
 
-struct hash_table* create(size_t size_key, size_t size_data)
+static struct hash_table* create(size_t size_key, size_t size_data)
 {
 	struct hash_table* new_table = (struct hash_table*)calloc(sizeof(struct hash_table), 1);
 	new_table->allocation_step = 2;
@@ -125,7 +125,7 @@ struct hash_table* create(size_t size_key, size_t size_data)
 	return new_table;
 };
 
-void destroy_hash_table(struct hash_table* table)
+static void destroy_hash_table(struct hash_table* table)
 {
 	unsigned int i, j;
 	unsigned int a = table->items;
@@ -146,7 +146,7 @@ void destroy_hash_table(struct hash_table* table)
 	free(table);	
 };
 
-void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size)
+static void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size)
 {
 	unsigned int i;
 	unsigned int find = 0;
@@ -186,7 +186,7 @@ void set_hash_table(struct hash_table* table, const void* key, size_t key_size, 
 	}
 }
 
-uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size)
+static uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size)
 {
 	unsigned int key_hash = hash_FAQ6(key,table->items,key_size);
 	unsigned int i;
@@ -201,7 +201,7 @@ uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_siz
 	return 0;		
 }
 
-uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
+static uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
 {
 	unsigned int key_hash = hash_FAQ6(key,table->items,key_size);
 	unsigned int i;
@@ -216,7 +216,7 @@ uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_si
 	return 0;			
 }
 
-void clear_hash_table(struct hash_table* table)
+static void clear_hash_table(struct hash_table* table)
 {
 	unsigned int i;
 	unsigned int a = table->items;
@@ -226,7 +226,7 @@ void clear_hash_table(struct hash_table* table)
 	}
 }
 
-void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
+static void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
 {
 	unsigned int key_hash = hash_FAQ6(key,table->items,key_size);
 	unsigned int i, j;
@@ -251,7 +251,7 @@ void remove_hash_table(struct hash_table* table, const void* key, size_t key_siz
 	}
 } 
 
-void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg))
+static void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg))
 {
 	unsigned int i, j;
 	unsigned int a = table->items;
