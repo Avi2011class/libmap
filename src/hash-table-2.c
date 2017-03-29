@@ -29,14 +29,14 @@ struct hash_table
 
 __PROTOTYPE(Hash2)
 
-static struct hash_table* create(size_t key_size, size_t data_size);
-static void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size);
-static uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size);
-static void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
-static uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
-static void clear_hash_table(struct hash_table* table);
-static void destroy_hash_table(struct hash_table* table);
-static void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg));
+ struct hash_table* create(size_t key_size, size_t data_size);
+ void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size);
+ uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size);
+ void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
+ uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size);
+ void clear_hash_table(struct hash_table* table);
+ void destroy_hash_table(struct hash_table* table);
+ void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg));
 
 #ifdef __cplusplus
 	}
@@ -83,7 +83,7 @@ void Hash2Foreach(map_t S, const void* arg, void (*function)(const void* key, co
 	foreach_hash_table((struct hash_table*)(S->structure_pointer), S->key_size, S->data_size, arg, function);
 }
 
-static unsigned int hash_FAQ6(const void* key, unsigned int items, size_t key_size)
+ unsigned int hash_FAQ6(const void* key, unsigned int items, size_t key_size)
 {
     unsigned int result_hash = 0;
     char *str = (char*)key;
@@ -100,7 +100,7 @@ static unsigned int hash_FAQ6(const void* key, unsigned int items, size_t key_si
     return result_hash % items;
 };
 
-static struct hash_table* create(size_t size_key, size_t size_data)
+ struct hash_table* create(size_t size_key, size_t size_data)
 {
 	struct hash_table* new_table = (struct hash_table*)calloc(sizeof(struct hash_table), 1);
 	new_table->allocation_step = 2;
@@ -125,7 +125,7 @@ static struct hash_table* create(size_t size_key, size_t size_data)
 	return new_table;
 };
 
-static void destroy_hash_table(struct hash_table* table)
+ void destroy_hash_table(struct hash_table* table)
 {
 	unsigned int i, j;
 	unsigned int a = table->items;
@@ -146,7 +146,7 @@ static void destroy_hash_table(struct hash_table* table)
 	free(table);	
 };
 
-static void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size)
+ void set_hash_table(struct hash_table* table, const void* key, size_t key_size, const void* data, size_t data_size)
 {
 	unsigned int i;
 	unsigned int find = 0;
@@ -156,7 +156,7 @@ static void set_hash_table(struct hash_table* table, const void* key, size_t key
  	{
 		if(memcmp(table->table[key_hash][i].key, key, key_size) == 0)
         	{
-            		memcpy(table->table[key_hash][i].data, data, data_size);
+            		memmove(table->table[key_hash][i].data, data, data_size);
             		find = 1;
             		break;
         	}
@@ -165,8 +165,8 @@ static void set_hash_table(struct hash_table* table, const void* key, size_t key
 	{
         	if(table->used[key_hash] < table->allocated[key_hash])
         	{
-			memcpy(table->table[key_hash][table->used[key_hash]].key, key, key_size);
-            		memcpy(table->table[key_hash][table->used[key_hash]].data, data, data_size);
+			memmove(table->table[key_hash][table->used[key_hash]].key, key, key_size);
+            		memmove(table->table[key_hash][table->used[key_hash]].data, data, data_size);
             		table->used[key_hash]++;
         	}
         	else
@@ -179,14 +179,14 @@ static void set_hash_table(struct hash_table* table, const void* key, size_t key
 			}
             		table->allocated[key_hash] += table->allocation_step;
 
-            		memcpy(table->table[key_hash][table->used[key_hash]].key, key, key_size);
-            		memcpy(table->table[key_hash][table->used[key_hash]].data, data, data_size);
+            		memmove(table->table[key_hash][table->used[key_hash]].key, key, key_size);
+            		memmove(table->table[key_hash][table->used[key_hash]].data, data, data_size);
             		table->used[key_hash]++;
 		}
 	}
 }
 
-static uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size)
+ uint8_t get_hash_table(struct hash_table* table, const void* key, size_t key_size, void* buffer, size_t data_size)
 {
 	unsigned int key_hash = hash_FAQ6(key,table->items,key_size);
 	unsigned int i;
@@ -194,14 +194,14 @@ static uint8_t get_hash_table(struct hash_table* table, const void* key, size_t 
 	for (i = 0; i < a; i++)
 	{		if (memcmp(key,table->table[key_hash][i].key, key_size) == 0)
 		{
-			memcpy(buffer, table->table[key_hash][i].data, data_size);
+			memmove(buffer, table->table[key_hash][i].data, data_size);
 			return 1;	
 		}
 	}
 	return 0;		
 }
 
-static uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
+ uint8_t find_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
 {
 	unsigned int key_hash = hash_FAQ6(key,table->items,key_size);
 	unsigned int i;
@@ -216,7 +216,7 @@ static uint8_t find_hash_table(struct hash_table* table, const void* key, size_t
 	return 0;			
 }
 
-static void clear_hash_table(struct hash_table* table)
+ void clear_hash_table(struct hash_table* table)
 {
 	unsigned int i;
 	unsigned int a = table->items;
@@ -226,7 +226,7 @@ static void clear_hash_table(struct hash_table* table)
 	}
 }
 
-static void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
+ void remove_hash_table(struct hash_table* table, const void* key, size_t key_size, size_t data_size)
 {
 	unsigned int key_hash = hash_FAQ6(key,table->items,key_size);
 	unsigned int i, j;
@@ -235,15 +235,15 @@ static void remove_hash_table(struct hash_table* table, const void* key, size_t 
 	{
 		if (memcmp(key,table->table[key_hash][i].key, key_size) == 0)
 		{
-			memcpy(table->table[key_hash][i].key, table->table[key_hash][a - 1].key, key_size);
-            		memcpy(table->table[key_hash][i].data, table->table[key_hash][a - 1].data, data_size);
+			memmove(table->table[key_hash][i].key, table->table[key_hash][a - 1].key, key_size);
+            		memmove(table->table[key_hash][i].data, table->table[key_hash][a - 1].data, data_size);
 			free(table->table[key_hash][a - 1].key);
 			free(table->table[key_hash][a - 1].data);
 			table->table[key_hash][a - 1].key = (void*)calloc(key_size,1);
 			table->table[key_hash][a - 1].data = (void*)calloc(data_size,1);
 			free(table->table[key_hash][table->allocated[key_hash] - 1].key);
 			free(table->table[key_hash][table->allocated[key_hash] - 1].data);
-			table->table[key_hash] = (struct hash_pair*)realloc(table->table[key_hash], (table->allocated[key_hash] - 1)*sizeof(struct hash_pair));	
+			table->table[key_hash] = (struct hash_pair*)realloc(table->table[key_hash], (table->allocated[key_hash] - 1)*sizeof(struct hash_pair)); //*/
 			table->used[key_hash]--;
 			table->allocated[key_hash]--;
 			break;
@@ -251,7 +251,7 @@ static void remove_hash_table(struct hash_table* table, const void* key, size_t 
 	}
 } 
 
-static void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg))
+ void foreach_hash_table(struct hash_table* table, size_t key_size, size_t data_size, const void* arg, void (*function)(const void* key, const void* data, const void* arg))
 {
 	unsigned int i, j;
 	unsigned int a = table->items;
