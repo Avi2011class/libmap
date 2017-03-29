@@ -14,10 +14,12 @@ all: libmap.a
 
 # binary test file building -> bin/gtest
 gtest: $(OBJ_PATH)gtest.o libmap.a $(OBJ_PATH)tree_unittests.o $(OBJ_PATH)hash_unittests.o $(OBJ_PATH)hash2_unittests.o
+	mkdir -p $(OBJ_PATH)
 	$(LINKER) $(OBJ_PATH)gtest.o $(OBJ_PATH)tree_unittests.o $(OBJ_PATH)hash_unittests.o $(OBJ_PATH)hash2_unittests.o libmap.a $(LINKER_OPTIONS) -o $(BIN_PATH)gtest 
 
 
 sample: $(SMP_PATH)sample.o libmap.a
+	mkdir -p $(OBJ_PATH)
 	$(LINKER) $(SMP_PATH)sample.o libmap.a -o $(SMP_PATH)sample.out
 	$(SMP_PATH)sample.out > $(SMP_PATH)data.out
 	gnuplot $(SMP_PATH)gnuplot.gnu
