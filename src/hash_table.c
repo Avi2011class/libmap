@@ -7,13 +7,13 @@
 #include "macro.h"
 #include "header.h"
 
-#define MAX_HASH 256 * 256 * 256
+#define MAX_HASH 100
 #define ALLOCATION_STEP 3
 
 struct HT {
 	uint32_t*	allocated;
 	uint32_t*	used;
-	void**	data;
+	void**		data;
 };
 typedef struct HT* __hash_t;
 /////////////////////////////////////////////////////////////////
@@ -122,6 +122,7 @@ static __hash_t HTInit(size_t key_size, size_t data_size)
 	result->allocated = (uint32_t*) calloc (sizeof(uint32_t), MAX_HASH);
 	result->data = (void**) calloc (sizeof(void*), MAX_HASH);
 	
+
 	if (result->used == NULL || result->allocated == NULL 
 										|| result->data == NULL) 
 		return NULL;
@@ -213,9 +214,11 @@ static void HTClear(__hash_t H)
 static void HTDestroy(__hash_t H)
 {
 	for (int i = 0; i < MAX_HASH; i++)
-		free(H->data[i]);
+		if (H->allocated[i] != 0)
+			free(H->data[i]);
 	free(H->used);
 	free(H->allocated);
+	free(H);
 }
 
 static void HTForeach(__hash_t H, size_t key_size, size_t data_size, const void* arg,
@@ -231,6 +234,7 @@ static void HTForeach(__hash_t H, size_t key_size, size_t data_size, const void*
 	}
 	return;
 }
+
 
 
 
