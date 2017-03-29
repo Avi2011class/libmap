@@ -7,7 +7,7 @@
 #include "macro.h"
 #include "header.h"
 
-#define MAX_HASH 100
+#define MAX_HASH 256*256*256
 #define ALLOCATION_STEP 3
 
 struct HT {
